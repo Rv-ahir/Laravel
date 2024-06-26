@@ -7,8 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>this is welcome</h1>
-    @extends('b')
-   @extends('c')
+    <h1>this is b</h1>
+    
 </body>
 </html>

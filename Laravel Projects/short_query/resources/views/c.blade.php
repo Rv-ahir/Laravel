@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>rambhai</title>
 </head>
 <body>
-    <h1>this is welcome</h1>
-    @extends('b')
-   @extends('c')
+    <h1>this is c</h1>
 </body>
 </html>
