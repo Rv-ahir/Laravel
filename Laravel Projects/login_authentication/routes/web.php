@@ -27,3 +27,5 @@ Route::post('logincheck',[UseController::class,'logincheck'])->name('logincheck'
 
 Route::get('/otp-verify/{user}', [OTPController::class, 'showVerifyForm'])->name('otp.verify');
 Route::post('/otp-verify/{user}', [OTPController::class, 'verifyOTP']);
+
+

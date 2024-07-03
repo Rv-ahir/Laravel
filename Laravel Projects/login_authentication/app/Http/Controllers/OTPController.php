@@ -19,14 +19,13 @@ class OTPController extends Controller
         $request->validate([
             'otp' => 'required|integer',
         ]);
-
         if ($user->otp === $request->otp && Carbon::now()->lessThanOrEqualTo($user->otp_expires_at)) {
             // OTP is valid
             $user->otp = null;
             $user->otp_expires_at = null;
             $user->save();
 
-            return redirect()->route('login')->with('success', 'OTP verified successfully. You can now log in.');
+            return redirect()->route('login')->with('status', 'OTP verified successfully. You can now log in.');
         } else {
             return redirect()->back()->withErrors(['otp' => 'Invalid OTP or OTP has expired.']);
         }

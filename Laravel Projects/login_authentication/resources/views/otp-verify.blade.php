@@ -1,5 +1,9 @@
 @extends('structure')
 
+@section('pagetitle')
+<h1 align="center">OTP-Verify</h1>
+@endsection
+
 @section('main')
 <div class="container">
     <div class="row justify-content-center">

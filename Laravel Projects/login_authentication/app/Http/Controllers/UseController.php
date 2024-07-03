@@ -24,8 +24,5 @@ class UseController extends Controller
         }
     }
 
-    public function mailsend()
-    {
-        
-    }
+   
 }

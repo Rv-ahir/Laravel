@@ -97,17 +97,18 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'dob' => 'required|date',
-            'gender' => 'required|in:male,female',
-            'subscription' => 'required',
-            'preferences' => 'required',
-            'comments' => 'required',
-            'photo' => 'required',
+            'up_name' => 'required',
+            'up_email' => 'required|email',
+            'up_dob' => 'required|date',
+            'up_gender' => 'required|in:male,female',
+            'up_subscription' => 'required',
+            'up_preferences' => 'required',
+            'up_comments' => 'required',
+            'up_photo' => 'required',
         ]);
-        $pre = implode(',', $request->preferences);
+        $pre = implode(',', $request->up_preferences);
 
 
         $user = User::find($id);
@@ -115,16 +116,16 @@ class UserController extends Controller
         if (file_exists($user_path)) {
             @unlink($user_path);
         }
-        $pre = implode(',', $request->preferences);
-        $path = $request->file('photo')->store('image', 'public');
+        $pre = implode(',', $request->up_preferences);
+        $path = $request->file('up_photo')->store('image', 'public');
         User::find($id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'dob' => $request->dob,
-            'gender' => $request->gender,
-            'subscription' => $request->subscription,
+            'name' => $request->up_name,
+            'email' => $request->up_email,
+            'dob' => $request->up_dob,
+            'gender' => $request->up_gender,
+            'subscription' => $request->up_subscription,
             'preferences' => $pre,
-            'comments' => $request->comments,
+            'comments' => $request->up_comments,
             'image' => $path,
         ]);
 
