@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\OTPController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UseController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,3 +23,7 @@ Route::get('dashboard',function(){
 
 Route::resource('user',UserController::class);
 Route::post('logincheck',[UseController::class,'logincheck'])->name('logincheck');
+
+
+Route::get('/otp-verify/{user}', [OTPController::class, 'showVerifyForm'])->name('otp.verify');
+Route::post('/otp-verify/{user}', [OTPController::class, 'verifyOTP']);

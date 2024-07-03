@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('DOB');
             $table->string('gender');
             $table->string('subscription');
-            $table->string('prefrences');
+            $table->string('preferences');
             $table->string('comments');
             $table->string('image');
             

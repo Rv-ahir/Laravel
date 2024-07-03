@@ -23,4 +23,9 @@ class UseController extends Controller
             return redirect()->route('login')->with('error','Invalid Credentials');
         }
     }
+
+    public function mailsend()
+    {
+        
+    }
 }

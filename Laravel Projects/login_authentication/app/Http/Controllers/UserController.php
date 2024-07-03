@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserMail;
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -32,12 +35,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // $pre = implode(',', $request->preferences);
-        // return $pre;
-        // return $request;
-        // dd($request->photo);
 
-        // dd($path);
 
         $request->validate([
             'name' => 'required',
@@ -66,19 +64,14 @@ class UserController extends Controller
             'image' => $path,
         ]);
 
-        // $user = new User();
-        // $user->name = $request->name;
-        // $user->email = $request->email;
-        // $user->password = bcrypt($request->password);
-        // $user->dob = $request->dob;
-        // $user->gender = $request->gender;
-        // $user->subscription = $request->subscription;
-        // $user->preferences = '[' . $pre . ']';
-        // $user->comments = $request->comments;
-        // $user->image = $path;
-        // $user->save();
+        $otp = rand(100000, 999999);
+        $user->otp = $otp;
+        $user->otp_expires_at = Carbon::now()->addMinutes(10); // OTP valid for 10 minutes
+        $user->save();
 
-        return redirect()->route('dashboard');
+        Mail::to($user->email)->send(new UserMail($otp));
+
+        return redirect()->route('otp.verify', ['user' => $user->id]);
     }
 
     /**
@@ -93,8 +86,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+
         $user = User::find($id);
-        
+
         return response()->json($user);
     }
 
@@ -103,10 +97,39 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'dob' => 'required|date',
+            'gender' => 'required|in:male,female',
+            'subscription' => 'required',
+            'preferences' => 'required',
+            'comments' => 'required',
+            'photo' => 'required',
+        ]);
+        $pre = implode(',', $request->preferences);
+
+
         $user = User::find($id);
-        return $user;
+        $user_path = public_path('storage/') . $user->image;
+        if (file_exists($user_path)) {
+            @unlink($user_path);
+        }
+        $pre = implode(',', $request->preferences);
+        $path = $request->file('photo')->store('image', 'public');
+        User::find($id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'dob' => $request->dob,
+            'gender' => $request->gender,
+            'subscription' => $request->subscription,
+            'preferences' => $pre,
+            'comments' => $request->comments,
+            'image' => $path,
+        ]);
 
 
+        return redirect()->route('user.index');
     }
 
     /**
@@ -116,9 +139,8 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        $user_path = public_path('storage/').$user->photo;
-        if(file_exists($user_path))
-        {
+        $user_path = public_path('storage/') . $user->image;
+        if (file_exists($user_path)) {
             @unlink($user_path);
         }
         return redirect()->route('user.index');
